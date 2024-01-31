@@ -52,7 +52,53 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
-  const handleFormSubmit = async (values, onSubmitProps) => {};
+  const register = async (values, onSubmitProps) => {
+    // This allows us to send form info with image
+    const formData = new FormData();
+    for (let value in values) {
+      formData.append(value, values[value])
+    }
+    formData.append('picturePath', values.picture.name);
+
+    const sevedUserResponse = await fetch("http://localhost:3001/auth/register", { method: "POST", body: formData })
+
+    const savedUser = await sevedUserResponse.json();
+    onSubmitProps.resetForm();
+
+    if (savedUser) {
+      setPageType("login");
+
+    }
+  };
+
+  const login = async (values, onSubmitProps) => {
+    // This allows us to send form info with image
+
+    const loggedInResponse = await fetch("http://localhost:3001/auth/login", { method: "POST", headers:{"Content-Type": "application/json"}, body: JSON.stringify(values) })
+    
+    const loggedIn = await loggedInResponse.json();
+    onSubmitProps.resetForm();
+
+    if (loggedIn) {
+      dispatch(
+        setLogIn({
+          user: loggedIn.user,
+          token: loggedIn.token
+        })
+      );
+      navigate("/home")
+    }
+
+    if (loggedIn) {
+      setPageType("login");
+
+    }
+  };
+
+  const handleFormSubmit = async (values, onSubmitProps) => {
+    if (isLogin) await login(values, onSubmitProps);
+    if(isRegister) await register(values, onSubmitProps)
+  };
 
   return (
     <Formik

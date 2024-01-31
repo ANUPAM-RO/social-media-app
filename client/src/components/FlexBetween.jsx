@@ -6,4 +6,4 @@ const FlexBeetween = styled(Box)({
     alignItems: "center"
 });
 
-export default FlexBeetween
+export default FlexBeetween;
