@@ -18,13 +18,12 @@ export const createPost = async (req, res) => {
       likes: {},
       comments: [],
     });
-
-    await newPost().save;
+    await newPost.save();
 
     const post = await Post.find();
     res.status(201).json(post);
-  } catch (error) {
-    res.status(409).json({ message: error.message });
+  } catch (err) {
+    res.status(409).json({ message: err.message });
   }
 };
 
